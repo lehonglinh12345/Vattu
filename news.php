@@ -11,15 +11,56 @@ require_once 'includes/db.php';
 
 $article_slug = trim($_GET['article'] ?? '');
 $selected_article = null;
+$prev_article = null;
+$next_article = null;
+
 if ($article_slug !== '') {
-    $articleResult = db_query('SELECT *, DATE_FORMAT(published_at, "%d/%m/%Y") AS date, image_alt AS alt FROM news_articles WHERE slug = ? AND section = ? AND status = ?', 'sss', [$article_slug, $section, 'published']);
+
+    // 1. Lấy bài hiện tại
+    $articleResult = db_query(
+        'SELECT *, DATE_FORMAT(published_at, "%d/%m/%Y") AS date, image_alt AS alt 
+         FROM news_articles 
+         WHERE slug = ? AND section = ? AND status = ?',
+        'sss',
+        [$article_slug, $section, 'published']
+    );
+
     if ($articleResult instanceof mysqli_result) {
         $selected_article = $articleResult->fetch_assoc();
     }
-}
 
+    // 2. Nếu có bài hiện tại thì mới tìm prev/next
+    if ($selected_article) {
+
+        // Bài trước (cũ hơn)
+        $prevResult = db_query(
+            'SELECT slug, title FROM news_articles 
+             WHERE section = ? AND status = ? AND published_at < ? 
+             ORDER BY published_at DESC LIMIT 1',
+            'sss',
+            [$section, 'published', $selected_article['published_at']]
+        );
+
+        if ($prevResult instanceof mysqli_result) {
+            $prev_article = $prevResult->fetch_assoc();
+        }
+
+        // Bài sau (mới hơn)
+        $nextResult = db_query(
+            'SELECT slug, title FROM news_articles 
+             WHERE section = ? AND status = ? AND published_at > ? 
+             ORDER BY published_at ASC LIMIT 1',
+            'sss',
+            [$section, 'published', $selected_article['published_at']]
+        );
+
+        if ($nextResult instanceof mysqli_result) {
+            $next_article = $nextResult->fetch_assoc();
+        }
+    }
+}
 $visible_articles = [];
-$per_page = 2;
+$per_page = 3;
 $current_page = max(1, intval($_GET['page'] ?? 1));
 $total_pages = 1;
 
@@ -88,6 +129,30 @@ if (!$selected_article) {
                     <div class="news-article-content">
                         <?php echo $selected_article['content']; ?>
                     </div>
+                    <!-- Prev / Next Navigation -->
+<div class="post-navigation">
+    <?php if ($prev_article): ?>
+        <a class="nav-prev" href="?section=<?php echo urlencode($section); ?>&article=<?php echo urlencode($prev_article['slug']); ?>">
+            <div class="nav-label">← Bài trước</div>
+            <div class="nav-title">
+                <?php echo htmlspecialchars($prev_article['title']); ?>
+            </div>
+        </a>
+    <?php else: ?>
+        <div></div>
+    <?php endif; ?>
+
+    <?php if ($next_article): ?>
+        <a class="nav-next" href="?section=<?php echo urlencode($section); ?>&article=<?php echo urlencode($next_article['slug']); ?>">
+            <div class="nav-label">Bài sau →</div>
+            <div class="nav-title">
+                <?php echo htmlspecialchars($next_article['title']); ?>
+            </div>
+        </a>
+    <?php else: ?>
+        <div></div>
+    <?php endif; ?>
+</div>
                     <div class="news-article-tag">
                         Bài viết này được đăng trong <a href="?section=<?php echo urlencode($section); ?>"><?php echo $section === 'tech' ? 'Kỹ thuật trồng trọt' : 'Tin Tức Nhà Nông'; ?></a>. Đánh dấu liên kết thường trực.
                     </div>

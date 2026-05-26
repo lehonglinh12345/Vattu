@@ -4,6 +4,7 @@ $page_desc = "Công ty Cổ phần Hóa chất Nhập khẩu Ngọc Ánh Dương
 $active_page = 'home';
 include 'includes/head.php';
 include 'includes/header.php';
+
 ?>
 
 <!-- Hero Section -->
@@ -22,29 +23,33 @@ include 'includes/header.php';
             </div>
         </div>
         
-        <div class="hero-visual">
-            <div class="hero-card">
-                <h3 style="color: var(--color-white); font-size: 1.5rem; text-align: center; margin-bottom: 2rem;">Thành Tựu Đồng Hành</h3>
-                <div class="hero-stats-row">
-                    <div class="hero-stat-item">
-                        <div class="hero-stat-num">08+</div>
-                        <div class="hero-stat-label">Năm Hoạt Động</div>
-                    </div>
-                    <div class="hero-stat-item">
-                        <div class="hero-stat-num">5K+</div>
-                        <div class="hero-stat-label">Khách Hàng</div>
-                    </div>
-                    <div class="hero-stat-item" style="margin-top: 1rem;">
-                        <div class="hero-stat-num">50+</div>
-                        <div class="hero-stat-label">Sản Phẩm Độc Quyền</div>
-                    </div>
-                    <div class="hero-stat-item" style="margin-top: 1rem;">
-                        <div class="hero-stat-num">100%</div>
-                        <div class="hero-stat-label">Cam Kết Chất Lượng</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+       <div class="hero-visual">
+   <div class="hero-visual">
+
+    <div class="hero-slider">
+
+        <img src="images/banner1.jpg" class="slide active" alt="">
+        <img src="images/banner2.jpg" class="slide" alt="">
+        <img src="images/banner3.jpg" class="slide" alt="">
+
+        <!-- Arrows -->
+        <button class="slider-btn prev">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <button class="slider-btn next">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+    </div>
+
+</div>
+
+<!-- Popup xem ảnh -->
+<div class="image-popup" id="imagePopup">
+    <span class="close-popup">&times;</span>
+    <img id="popupImage" src="" alt="">
+</div>
     </div>
 </section>
 
@@ -359,7 +364,67 @@ include 'includes/header.php';
         </div>
     </div>
 </section>
+<script>
+    const slides = document.querySelectorAll(".hero-slider .slide");
+    const nextBtn = document.querySelector(".next");
+    const prevBtn = document.querySelector(".prev");
 
+    const popup = document.getElementById("imagePopup");
+    const popupImg = document.getElementById("popupImage");
+    const closePopup = document.querySelector(".close-popup");
+
+    let currentSlide = 0;
+
+    // Hiện slide
+    function showSlide(index) {
+        slides.forEach(slide => {
+            slide.classList.remove("active");
+        });
+
+        slides[index].classList.add("active");
+    }
+
+    // Next
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+
+    // Prev
+    function prevSlide() {
+        currentSlide =
+            (currentSlide - 1 + slides.length) % slides.length;
+
+        showSlide(currentSlide);
+    }
+
+    // Nút bấm
+    nextBtn.addEventListener("click", nextSlide);
+    prevBtn.addEventListener("click", prevSlide);
+
+    // Auto chạy
+    setInterval(nextSlide, 4000);
+
+    // Click mở ảnh lớn
+    slides.forEach(slide => {
+        slide.addEventListener("click", () => {
+            popup.classList.add("active");
+            popupImg.src = slide.src;
+        });
+    });
+
+    // Đóng popup
+    closePopup.addEventListener("click", () => {
+        popup.classList.remove("active");
+    });
+
+    // Click ngoài để đóng
+    popup.addEventListener("click", (e) => {
+        if (e.target === popup) {
+            popup.classList.remove("active");
+        }
+    });
+</script>
 <div style="height: 5rem;"></div>
 
 <?php

@@ -23,5 +23,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/contact.css">
     <link rel="stylesheet" href="css/banner.css">
+
+    <script src="js/menu-dropdown.js"></script>
 </head>
 <body>

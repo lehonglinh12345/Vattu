@@ -35,9 +35,9 @@ if (!$product) {
         </div>
     </section>
     <section class="section">
-        <div class="container" style="text-align:center; padding: 4rem 0;">
+        <div class="container error-product-container">
             <h2>Rất tiếc, sản phẩm bạn tìm kiếm không tồn tại.</h2>
-            <p style="color: var(--color-dark-muted); margin: 1rem 0 2rem;">Vui lòng quay lại trang danh mục hoặc thử lại bằng một sản phẩm khác.</p>
+            <p>Vui lòng quay lại trang danh mục hoặc thử lại bằng một sản phẩm khác.</p>
             <a href="products.php" class="btn btn-primary">Quay lại danh sách sản phẩm</a>
         </div>
     </section>
@@ -60,10 +60,9 @@ if ($relatedResult instanceof mysqli_result) {
 
 $content_detail = '<p>' . htmlspecialchars($product['description']) . '</p>';
 $content_usage = '<p>Để nhận hướng dẫn kỹ thuật sử dụng và liều lượng phù hợp, vui lòng liên hệ Hotline hoặc gửi yêu cầu báo giá.</p>';
-$content_technical = '<ul><li>Loại sản phẩm: ' . htmlspecialchars($product['badge'] ?: 'Nông nghiệp') . '</li><li>Xuất xứ: ' . htmlspecialchars($product['origin']) . '</li><li>Giá: ' . htmlspecialchars($product['price']) . '</li></ul><p>Thông tin kỹ thuật chi tiết sẽ được gửi theo yêu cầu khách hàng.</p>';
+$content_technical = '<ul class="tech-info-list"><li><strong>Loại sản phẩm:</strong> ' . htmlspecialchars($product['badge'] ?: 'Nông nghiệp') . '</li><li><strong>Xuất xứ:</strong> ' . htmlspecialchars($product['origin']) . '</li><li><strong>Giá:</strong> ' . htmlspecialchars($product['price']) . '</li></ul><p>Thông tin kỹ thuật chi tiết sẽ được gửi theo yêu cầu khách hàng.</p>';
 ?>
 
-<!-- Page Header Banner -->
 <section class="about-hero" style="background: linear-gradient(rgba(18, 24, 32, 0.75), rgba(18, 24, 32, 0.8)), url('images/hero-bg.jpg') center/cover;">
     <div class="container">
         <h1>Chi Tiết Sản Phẩm</h1>
@@ -77,16 +76,16 @@ $content_technical = '<ul><li>Loại sản phẩm: ' . htmlspecialchars($product
     </div>
 </section>
 
-<!-- Product Details Section -->
-<section class="section">
+<section class="section detail-section">
     <div class="container">
         <div class="prod-detail-grid">
             <div class="detail-img-box">
-                <img src="<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                <img src="<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" class="main-detail-img">
                 <?php if (!empty($product['badge'])): ?>
-                    <span class="prod-badge <?php echo htmlspecialchars($product['badge_class']); ?>" style="position:absolute; top: 1rem; left: 1rem; z-index: 2;"><?php echo htmlspecialchars($product['badge']); ?></span>
+                    <span class="prod-badge <?php echo htmlspecialchars($product['badge_class']); ?>"><?php echo htmlspecialchars($product['badge']); ?></span>
                 <?php endif; ?>
             </div>
+            
             <div class="prod-detail-info">
                 <span class="detail-meta-cat"><?php echo htmlspecialchars($product['category_name']); ?></span>
                 <h1><?php echo htmlspecialchars($product['name']); ?></h1>
@@ -94,16 +93,19 @@ $content_technical = '<ul><li>Loại sản phẩm: ' . htmlspecialchars($product
                     Xuất xứ: <strong><?php echo htmlspecialchars($product['origin']); ?></strong>
                 </p>
                 <div class="detail-price"><?php echo htmlspecialchars($product['price']); ?></div>
-                <div class="detail-description" style="margin: 2rem 0; color: var(--color-dark-muted); line-height: 1.8;">
+                
+                <div class="detail-description">
                     <?php echo nl2br(htmlspecialchars($product['description'])); ?>
                 </div>
+                
                 <div class="detail-actions">
-                    <a href="tel:0976828171" class="btn btn-primary" style="padding: 0.85rem 2.25rem;"><i class="fa-solid fa-phone-volume"></i> Gọi Ngay: 0976.828.171</a>
-                    <a href="contact.php?subject=Yeu%20cau%20bao%20gia%20<?php echo urlencode($product['name']); ?>" class="btn btn-outline"><i class="fa-solid fa-envelope"></i> Gửi Yêu Cầu Báo Giá</a>
+                    <a href="tel:0976828171" class="btn btn-primary btn-call-now"><i class="fa-solid fa-phone-volume"></i> Gọi Ngay: 0976.828.171</a>
+                    <a href="contact.php?subject=Yeu%20cau%20bao%20gia%20<?php echo urlencode($product['name']); ?>" class="btn btn-outline btn-quote"><i class="fa-solid fa-envelope"></i> Gửi Yêu Cầu Báo Giá</a>
                 </div>
             </div>
         </div>
-        <div style="margin-top: 4rem;">
+        
+        <div class="product-tabs-container">
             <div class="detail-tabs-nav">
                 <button class="tab-btn active" data-tab="tab-desc">Mô tả sản phẩm</button>
                 <button class="tab-btn" data-tab="tab-usage">Hướng dẫn</button>
@@ -121,13 +123,15 @@ $content_technical = '<ul><li>Loại sản phẩm: ' . htmlspecialchars($product
                 </div>
             </div>
         </div>
+        
         <?php if (!empty($related_products)): ?>
-            <div style="margin-top: 5rem;">
-                <div class="text-center" style="margin-bottom: 3rem;">
-                    <h2 style="font-size: 1.75rem;">Sản Phẩm Cùng Loại Khác</h2>
-                    <div style="width: 50px; height: 3px; background-color: var(--color-primary); margin: 0.5rem auto 0 auto; border-radius: 2px;"></div>
+            <div class="related-products-section">
+                <div class="text-center section-title-wrapper">
+                    <h2>Sản Phẩm Cùng Loại Khác</h2>
+                    <div class="title-line"></div>
                 </div>
-                <div class="product-grid" style="grid-template-columns: repeat(4, 1fr);">
+                
+                <div class="product-grid-related">
                     <?php foreach ($related_products as $p_data): ?>
                         <div class="product-card">
                             <div class="prod-img-wrapper">
@@ -151,6 +155,25 @@ $content_technical = '<ul><li>Loại sản phẩm: ' . htmlspecialchars($product
         <?php endif; ?>
     </div>
 </section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tabPanes = document.querySelectorAll(".tab-pane");
+
+    tabButtons.forEach(button => {
+        button.addEventListener("click", function() {
+            const targetTab = this.getAttribute("data-tab");
+
+            tabButtons.forEach(btn => btn.classList.remove("active"));
+            tabPanes.forEach(pane => pane.classList.remove("active"));
+
+            this.classList.add("active");
+            document.getElementById(targetTab).classList.add("active");
+        });
+    });
+});
+</script>
 
 <?php
 include 'includes/footer.php';

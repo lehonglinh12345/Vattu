@@ -1,99 +1,318 @@
-/* =========================
-   RESPONSIVE PRODUCTS PAGE
-   ========================= */
+/* ==========================================================================
+   CSS BASE & LAYOUT CHO CATALOG (Áp dụng chung)
+   ========================================================================== */
+.catalog-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
 
-/* ===== TABLET + MOBILE ===== */
-@media (max-width: 992px) {
+.filter-sidebar {
+    width: 300px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 20px;
+}
 
-    .catalog-layout {
-        display: flex;
-        flex-direction: column;
+.catalog-results {
+    flex-grow: 1;
+}
+
+/* Tối ưu hóa ô tìm kiếm */
+.search-form-wrapper {
+    position: relative;
+}
+.search-input {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    font-family: var(--font-primary);
+}
+.search-submit-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-dark-muted);
+    cursor: pointer;
+}
+
+/* Widget hỗ trợ */
+.widget-support {
+    background-color: var(--color-light);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px dashed var(--color-primary);
+}
+.widget-support h4 {
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+}
+.widget-support p {
+    font-size: 0.85rem;
+    color: var(--color-dark-muted);
+    margin-bottom: 1rem;
+}
+.support-phone-btn {
+    font-weight: 700;
+    color: var(--color-secondary);
+    font-size: 1.1rem;
+    display: block;
+    text-align: center;
+    border: 1px solid var(--color-secondary);
+    padding: 0.5rem;
+    border-radius: 6px;
+    background-color: var(--color-white);
+    transition: all 0.3s;
+}
+.support-phone-btn:hover {
+    background-color: var(--color-secondary);
+    color: #fff;
+}
+
+/* Thanh Header danh mục */
+.catalog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+}
+.sort-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.sort-label {
+    font-size: 0.9rem;
+    color: var(--color-dark-muted);
+    white-space: nowrap;
+}
+.sort-select {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    background-color: #fff;
+}
+
+/* Lưới sản phẩm mặc định (Desktop) */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+/* Không tìm thấy sản phẩm */
+.no-results-box {
+    text-align: center;
+    padding: 5rem 2rem;
+    background-color: var(--color-white);
+    border-radius: 16px;
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+}
+.no-results-icon {
+    font-size: 3.5rem;
+    color: var(--color-dark-muted);
+    margin-bottom: 1.5rem;
+}
+.no-results-box p {
+    color: var(--color-dark-muted);
+    margin-bottom: 2rem;
+}
+
+/* Mặc định ẩn nút Trigger bộ lọc trên Desktop */
+.mobile-filter-trigger {
+    display: none;
+}
+
+
+/* ==========================================================================
+   RESPONSIVE: TABLET (Dưới 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr); /* Giảm xuống 2 cột trên ipad */
     }
-
-    .catalog-results {
-        width: 100%;
-        order: 1;
-    }
-
     .filter-sidebar {
-        width: 100%;
-        order: 2;
-        margin-top: 20px;
+        width: 260px; /* Sidebar nhỏ lại chút */
     }
 }
 
-/* ===== TABLET ===== */
-@media (max-width: 768px) {
 
-    /* GRID 3 → 2 CỘT */
+/* ==========================================================================
+   RESPONSIVE: ĐIỆN THOẠI DI ĐỘNG (Dưới 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .catalog-layout {
+        flex-direction: column; /* Chuyển bố cục thành 1 hàng dọc */
+        gap: 1rem;
+    }
+
+    /* Hiển thị nút bật bộ lọc di động */
+    .mobile-filter-trigger {
+        display: block;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    .mobile-filter-trigger button {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: var(--color-primary, #2ecc71);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    /* Biến Sidebar thành dạng Drawer (Trượt/Thả ẩn hiện) để tránh chiếm diện tích */
+    .filter-sidebar {
+        width: 100%;
+        position: static;
+        display: none; /* Mặc định ẩn trên mobile */
+        background: #fdfdfd;
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+    }
+    
+    /* Khi người dùng bấm kích hoạt class .active */
+    .filter-sidebar.active {
+        display: block; 
+        animation: slideDown 0.3s ease-in-out;
+    }
+
+    /* Header của danh mục sản phẩm sắp xếp lại */
+    .catalog-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .sort-wrapper {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .sort-select {
+        flex-grow: 1;
+        max-width: 200px;
+    }
+
+    /* Grid sản phẩm điện thoại: Ưu tiên hiển thị 2 cột để xem được nhiều sản phẩm */
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem; /* Khoảng cách nhỏ lại cho vừa màn hình bé */
+    }
+    
+    /* Tối ưu nhẹ font chữ và padding card trên mobile */
+    .product-card {
+        padding: 0.5rem;
+    }
+    .prod-title {
+        font-size: 0.95rem;
+        margin: 0.5rem 0;
+    }
+    .prod-price {
+        font-size: 0.95rem;
+    }
+    
+    /* Đối với màn hình điện thoại siêu nhỏ (dưới 400px) thì đưa về 1 cột */
+    @media (max-width: 400px) {
+        .product-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+/* Hiệu ứng mượt mà khi mở bộ lọc */
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* ==========================================================================
+   RESPONSIVE: ĐIỆN THOẠI DI ĐỘNG (Dưới 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .catalog-layout {
+        flex-direction: column; 
+        gap: 1.5rem;
+    }
+
+    /* Hiển thị nút bật bộ lọc di động */
+    .mobile-filter-trigger {
+        display: block !important;
+        margin: 1rem 0;
+        padding: 0 15px; /* Tránh dính sát mép màn hình */
+    }
+    .mobile-filter-trigger button {
+        width: 100%;
+        padding: 0.8rem;
+        background-color: var(--color-primary, #2ecc71);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        transition: all 0.2s ease;
+    }
+
+    /* Cấu hình lại Sidebar thành menu động trên Mobile */
+    .filter-sidebar {
+        width: 100% !important;
+        max-height: 0;            /* Mặc định giấu đi bằng chiều cao bằng 0 */
+        overflow: hidden;         /* Ẩn phần thừa */
+        opacity: 0;
+        visibility: hidden;
+        position: static;
+        padding: 0 1rem;          /* Thu nhỏ padding khi đóng */
+        background: #f9f9f9;
+        border-radius: 12px;
+        transition: all 0.35s ease-in-out; /* Tạo hiệu ứng mượt mà */
+        margin-bottom: 0;
+    }
+    
+    /* Lớp kích hoạt khi BẤM NÚT hoạt động */
+    .filter-sidebar.show-mobile {
+        max-height: 1000px;       /* Cho phép mở rộng tối đa để thấy hết widget */
+        opacity: 1;
+        visibility: visible;
+        padding: 1.5rem 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--color-border, #ddd);
+    }
+
+    /* Giữ nguyên lưới sản phẩm 2 cột trên điện thoại */
     .product-grid {
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px;
+        gap: 0.75rem;
     }
-
-    /* SIDEBAR STYLE */
-    .filter-sidebar {
-        background: #fff;
-        border-radius: 12px;
-        padding: 15px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .filter-widget h3 {
-        font-size: 16px;
-    }
-
-    .category-list a {
-        font-size: 14px;
-    }
-
-    /* HEADER FILTER */
+    
     .catalog-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
+        gap: 1rem;
     }
-}
-
-/* ===== MOBILE ===== */
-@media (max-width: 576px) {
-
-    /* GRID 1 CỘT */
-    .product-grid {
-        grid-template-columns: 1fr !important;
-    }
-
-    /* TEXT SIZE */
-    .prod-title {
-        font-size: 14px;
-    }
-
-    .prod-price {
-        font-size: 14px;
-    }
-
-    /* FILTER BOX */
-    .filter-widget {
-        padding: 1rem;
-    }
-
-    /* HEADER */
-    .catalog-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-
-    .results-count {
-        font-size: 14px;
-    }
-
-    /* SIDEBAR BUTTON PHONE */
-    .filter-widget h4 {
-        font-size: 15px;
-    }
-
-    .filter-widget p {
-        font-size: 13px;
+    .sort-wrapper {
+        width: 100%;
+        justify-content: space-between;
     }
 }

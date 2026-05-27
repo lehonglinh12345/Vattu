@@ -54,7 +54,6 @@ if ($productResult instanceof mysqli_result) {
         $filtered_products[] = $row;
     }
 }
-
 ?>
 
 <!-- Page Header Banner -->
@@ -69,20 +68,25 @@ if ($productResult instanceof mysqli_result) {
     </div>
 </section>
 
+<!-- Nút kích hoạt bộ lọc nhanh trên Mobile -->
+<div class="mobile-filter-trigger container">
+    <button id="toggleFilterBtn"><i class="fa-solid fa-filter"></i> Bộ lọc & Tìm kiếm</button>
+</div>
+
 <!-- Catalog Main Section -->
-<section class="section">
+<section class="section catalog-section">
     <div class="container catalog-layout">
         
         <!-- Sidebar Filters -->
-        <aside class="filter-sidebar">
+        <aside class="filter-sidebar" id="filterSidebar">
             <div class="filter-widget">
                 <h3>Tìm Kiếm Nhanh</h3>
-                <form action="products.php" method="GET" style="position: relative;">
+                <form action="products.php" method="GET" class="search-form-wrapper">
                     <?php if ($selected_category !== 'all'): ?>
                         <input type="hidden" name="category" value="<?php echo htmlspecialchars($selected_category); ?>">
                     <?php endif; ?>
-                    <input type="text" name="search" placeholder="Nhập tên sản phẩm..." value="<?php echo htmlspecialchars($search_query); ?>" style="width: 100%; padding: 0.75rem 2.5rem 0.75rem 1rem; border: 1px solid var(--color-border); border-radius: 8px; font-family: var(--font-primary);">
-                    <button type="submit" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--color-dark-muted); cursor: pointer;"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <input type="text" name="search" class="search-input" placeholder="Nhập tên sản phẩm..." value="<?php echo htmlspecialchars($search_query); ?>">
+                    <button type="submit" class="search-submit-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </form>
             </div>
             
@@ -106,10 +110,10 @@ if ($productResult instanceof mysqli_result) {
                 </ul>
             </div>
             
-            <div class="filter-widget" style="background-color: var(--color-light); padding: 1.5rem; border-radius: 12px; border: 1px dashed var(--color-primary);">
-                <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;"><i class="fa-solid fa-phone"></i> Hỗ Trợ Đặt Hàng</h4>
-                <p style="font-size: 0.85rem; color: var(--color-dark-muted); margin-bottom: 1rem;">Liên hệ trực tiếp để nhận bảng báo giá sỉ đại lý chiết khấu cao tốt nhất.</p>
-                <a href="tel:0976828171" style="font-weight: 700; color: var(--color-secondary); font-size: 1.1rem; display: block; text-align: center; border: 1px solid var(--color-secondary); padding: 0.5rem; border-radius: 6px; background-color: var(--color-white);">0976.828.171</a>
+            <div class="filter-widget widget-support">
+                <h4><i class="fa-solid fa-phone"></i> Hỗ Trợ Đặt Hàng</h4>
+                <p>Liên hệ trực tiếp để nhận bảng báo giá sỉ đại lý chiết khấu cao tốt nhất.</p>
+                <a href="tel:0976828171" class="support-phone-btn">0976.828.171</a>
             </div>
         </aside>
         
@@ -124,8 +128,8 @@ if ($productResult instanceof mysqli_result) {
                     <?php endif; ?>
                 </div>
                 
-                <div style="display: flex; align-items: center; gap: 0.75rem;">
-                    <span style="font-size: 0.9rem; color: var(--color-dark-muted);">Sắp xếp:</span>
+                <div class="sort-wrapper">
+                    <span class="sort-label">Sắp xếp:</span>
                     <select class="sort-select">
                         <option value="featured">Sản phẩm nổi bật</option>
                         <option value="name_asc">Tên A-Z</option>
@@ -134,14 +138,16 @@ if ($productResult instanceof mysqli_result) {
                 </div>
             </div>
             
-            <!-- Products Catalog Grid -->
+            <!-- Products Catalog Grid (Đã bỏ inline style cứng để CSS điều khiển) -->
             <?php if (count($filtered_products) > 0): ?>
-                <div class="product-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="product-grid">
                     <?php foreach ($filtered_products as $prod): ?>
                         <div class="product-card">
                             <div class="prod-img-wrapper">
                                 <img src="<?php echo htmlspecialchars($prod['image']); ?>" alt="<?php echo htmlspecialchars($prod['name']); ?>" class="prod-img">
-                                <span class="prod-badge <?php echo htmlspecialchars($prod['badge_class']); ?>"><?php echo htmlspecialchars($prod['badge']); ?></span>
+                                <?php if(!empty($prod['badge'])): ?>
+                                    <span class="prod-badge <?php echo htmlspecialchars($prod['badge_class']); ?>"><?php echo htmlspecialchars($prod['badge']); ?></span>
+                                <?php endif; ?>
                             </div>
                             <div class="prod-body">
                                 <span class="prod-cat"><?php echo htmlspecialchars($prod['category_name']); ?></span>
@@ -157,10 +163,10 @@ if ($productResult instanceof mysqli_result) {
                 </div>
             <?php else: ?>
                 <!-- No Results State -->
-                <div style="text-align: center; padding: 5rem 2rem; background-color: var(--color-white); border-radius: 16px; border: 1px solid var(--color-border); box-shadow: var(--shadow-sm);">
-                    <div style="font-size: 3.5rem; color: var(--color-dark-muted); margin-bottom: 1.5rem;"><i class="fa-solid fa-folder-open"></i></div>
+                <div class="no-results-box">
+                    <div class="no-results-icon"><i class="fa-solid fa-folder-open"></i></div>
                     <h3>Không tìm thấy sản phẩm phù hợp</h3>
-                    <p style="color: var(--color-dark-muted); margin-bottom: 2rem;">Vui lòng thử lại với từ khóa tìm kiếm hoặc danh mục khác.</p>
+                    <p>Vui lòng thử lại với từ khóa tìm kiếm hoặc danh mục khác.</p>
                     <a href="products.php" class="btn btn-primary">Xóa bộ lọc</a>
                 </div>
             <?php endif; ?>
@@ -168,6 +174,32 @@ if ($productResult instanceof mysqli_result) {
         
     </div>
 </section>
+
+<!-- Script nhỏ xử lý Đóng/Mở bộ lọc mượt mà trên Điện thoại -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const toggleBtn = document.getElementById("toggleFilterBtn");
+    const sidebar = document.getElementById("filterSidebar");
+    
+    if (toggleBtn && sidebar) {
+        toggleBtn.addEventListener("click", function(e) {
+            e.preventDefault(); // Ngăn chặn mọi hành vi cuộn mặc định
+            sidebar.classList.toggle("show-mobile");
+            
+            // Thay đổi nội dung nút để người dùng biết trạng thái
+            if (sidebar.classList.contains("show-mobile")) {
+                toggleBtn.innerHTML = '<i class="fa-solid fa-xmark"></i> Đóng bộ lọc';
+                toggleBtn.style.backgroundColor = '#e74c3c'; // Đổi sang màu đỏ khi muốn đóng
+            } else {
+                toggleBtn.innerHTML = '<i class="fa-solid fa-filter"></i> Bộ lọc & Tìm kiếm';
+                toggleBtn.style.backgroundColor = ''; // Về màu chủ đạo mặc định
+            }
+        });
+    }
+});
+
+</script>
 
 <?php
 include 'includes/footer.php';

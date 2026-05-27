@@ -182,14 +182,7 @@ h1,h2,h3,h4,h5,h6 {
     height: var(--header-height);
 }
 
-/* ── Logo ── */
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    flex-shrink: 0;              /* logo không bị co */
-    white-space: nowrap;
-}
+
 
 .logo-icon {
     width: 44px;
@@ -218,78 +211,125 @@ h1,h2,h3,h4,h5,h6 {
     width: 100%;
     height: 100%;
 }
-
-.logo-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.1;
+/* ===== Logo Layout ===== */
+.logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    text-decoration:none;
 }
 
-.brand-name {
-    font-family: "Times New Roman", serif;
-    font-size: 1.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+.logo-text{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    line-height:1;
+}
 
-    background: linear-gradient(
+/* ===== Dòng trên ===== */
+.company-line{
+    font-size:0.55rem;
+    font-weight:500;
+    color:#4d7c57;
+    letter-spacing:0.8px;
+    text-transform:uppercase;
+    margin-bottom:2px;
+    font-family:"Segoe UI", sans-serif;
+}
+
+/* ===== Tên chính ===== */
+.brand-name{
+    font-family:"Times New Roman", serif;
+    font-size:0.9rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin:0;
+
+    background:linear-gradient(
         90deg,
+        #1f5f2c,
         #2f7d13,
-        #7dff4d,
-        #ffffff,
-        #7dff4d,
-        #2f7d13
+        #4ba94f,
+        #2f7d13,
+        #1f5f2c
     );
 
-    background-size: 300% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    background-size:300% auto;
 
-    text-shadow: 0 0 8px rgba(125, 255, 77, 0.4);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
 
-    animation: shine 4s linear infinite;
+    text-shadow:0 0 6px rgba(76,175,80,0.15);
+
+    animation:shine 8s linear infinite;
 }
 
-@keyframes shine {
-    0% {
-        background-position: 0% center;
+/* ===== Dòng dưới ===== */
+.brand-sub{
+    font-size:0.6rem;
+    font-style:italic;
+    letter-spacing:0.8px;
+    color:#d98a2b;
+    margin-top:2px;
+    font-weight:500;
+    text-transform:uppercase;
+    font-family:"Times New Roman", serif;
+}
+
+/* ===== Animation ===== */
+@keyframes shine{
+    0%{
+        background-position:0% center;
     }
-    100% {
-        background-position: 300% center;
+    100%{
+        background-position:300% center;
     }
 }
 
-.brand-name {
-    font-family: "Times New Roman", serif;
-    font-size: 1.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-
-    background: linear-gradient(
-        90deg,
-        #2f7d13,
-        #7dff4d,
-        #248b63,
-        #7dff4d,
-        #2f7d13
-    );
-
-    background-size: 300% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-
-    text-shadow: 0 0 6px rgba(125, 255, 77, 0.3);
-
-    animation: shine 10s linear infinite;
+/* ===== Logo Image ===== */
+.logo-icon img{
+    width:62px;
+    height:62px;
+    object-fit:contain;
 }
 
-@keyframes shine {
-    0% {
-        background-position: 0% center;
+/* ===== Mobile ===== */
+@media (max-width:768px){
+
+    .logo{
+        gap:7px;
     }
-    100% {
-        background-position: 300% center;
+
+    .logo-icon img{
+        width:48px;
+        height:48px;
+    }
+
+    .company-line{
+        font-size:0.42rem;
+    }
+
+    .brand-name{
+        font-size:0.8rem;
+        letter-spacing:0.5px;
+    }
+
+    .brand-sub{
+        font-size:0.48rem;
+    }
+}
+/* ===== Tablet ===== */
+@media (max-width:1024px){
+    .brand-name{
+        font-size:1rem;
+        letter-spacing:0.5px;
+    }
+
+    .brand-sub{
+        font-size:0.6rem;
+        letter-spacing:1px;
+        margin-top:1px;
     }
 }
 

@@ -33,10 +33,24 @@ function render_logo(string $href = 'index.php', bool $show_sub = true): string 
                 </defs>
             </svg>
         </div>
-        <div class="logo-text">
-            <span class="brand-name">NGỌC ÁNH DƯƠNG</span>
-            {$sub}
-        </div>
+       <div class="logo-text">
+        
+        <!-- Dòng trên -->
+        <span class="company-line">
+            CÔNG TY CỔ PHẦN
+        </span>
+
+        <!-- Tên chính -->
+        <span class="brand-name">
+            NGỌC ÁNH DƯƠNG
+        </span>
+
+        <!-- Dòng dưới -->
+        <span class="brand-sub">
+            HÓA CHẤT NHẬP KHẨU
+        </span>
+
+    </div>
     </a>
     HTML;
 }

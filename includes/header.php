@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/auth.php';
+
 $nav_items = [
     ['href' => 'index.php',             'label' => 'Trang chủ',  'key' => 'home'],
     ['href' => 'about.php',             'label' => 'Giới thiệu', 'key' => 'about'],
@@ -78,6 +80,89 @@ function render_logo(string $href = 'index.php', bool $show_sub = true): string 
             </ul>
         </nav>
 
+        <style>
+        /* User Dropdown Navigation Styles */
+        .user-menu-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .user-menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.25rem !important;
+            border-radius: 50px;
+            border: 2px solid var(--color-primary);
+            background: transparent;
+            color: var(--color-primary);
+            cursor: pointer;
+            font-family: var(--font-primary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: var(--transition-normal);
+        }
+        .user-menu-btn:hover {
+            background-color: rgba(11, 102, 37, 0.06);
+            transform: translateY(-1px);
+        }
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background-color: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            min-width: 200px;
+            padding: 0.5rem 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: var(--transition-normal);
+            z-index: 999;
+        }
+        .user-dropdown.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.88rem;
+            color: var(--color-dark);
+            font-weight: 500;
+            transition: var(--transition-fast);
+        }
+        .dropdown-item:hover {
+            background-color: var(--color-light);
+            color: var(--color-primary);
+        }
+        .dropdown-item i {
+            font-size: 1rem;
+            color: var(--color-dark-muted);
+        }
+        .dropdown-item:hover i {
+            color: var(--color-primary);
+        }
+        .dropdown-item.logout-link:hover {
+            color: #ef4444 !important;
+            background-color: #fef2f2;
+        }
+        .dropdown-item.logout-link:hover i {
+            color: #ef4444 !important;
+        }
+        .user-name-text {
+            max-width: 100px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+        }
+        </style>
+
         <div class="header-actions">
             <div class="search-box">
                 <form action="products.php" method="GET" role="search">
@@ -88,6 +173,33 @@ function render_logo(string $href = 'index.php', bool $show_sub = true): string 
                     </button>
                 </form>
             </div>
+
+            <?php if (auth_is_logged_in()): 
+                $curr_user = auth_get_user();
+            ?>
+                <div class="user-menu-wrapper">
+                    <button class="user-menu-btn" id="userMenuBtn" aria-label="Menu người dùng">
+                        <i class="fa-solid fa-circle-user" style="font-size: 1.1rem;"></i>
+                        <span class="user-name-text"><?= h($curr_user['full_name'] ?: $curr_user['username']) ?></span>
+                        <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; opacity: 0.7;"></i>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <?php if ($curr_user['role'] === 'admin'): ?>
+                            <a href="admin_dashboard.php" class="dropdown-item">
+                                <i class="fa-solid fa-chart-line"></i> Trang Quản Trị
+                            </a>
+                        <?php endif; ?>
+                        <a href="logout.php" class="dropdown-item logout-link">
+                            <i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất
+                        </a>
+                    </div>
+                </div>
+            <?php else: ?>
+                <a href="login.php" class="btn btn-outline" style="padding: 0.6rem 1.25rem; font-size: 0.85rem; border-radius: 50px;">
+                    <i class="fa-solid fa-right-to-bracket"></i> Đăng Nhập
+                </a>
+            <?php endif; ?>
+
             <a href="contact.php" class="btn btn-primary btn-quote">
                 <i class="fa-solid fa-tag"></i> Báo Giá
             </a>
@@ -136,9 +248,39 @@ function render_logo(string $href = 'index.php', bool $show_sub = true): string 
     </ul>
 
     <div class="mobile-contacts">
-        <a href="tel:0976828171"><i class="fa-solid fa-phone"></i> 0976.828.171</a>
-        <a href="mailto:ngocanhduongchemical@gmail.com"><i class="fa-solid fa-envelope"></i> ngocanhduongchemical@gmail.com</a>
-        <a href="contact.php" class="btn btn-primary" style="margin-top:.5rem;justify-content:center;">
+        <?php if (auth_is_logged_in()): 
+            $curr_user = auth_get_user();
+        ?>
+            <div class="mobile-user-info" style="margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--color-border);">
+                <div style="font-weight: 700; color: var(--color-secondary); margin-bottom: 0.25rem; font-size: 1.05rem;">
+                    <i class="fa-solid fa-circle-user"></i> Xin chào, <?= h($curr_user['full_name'] ?: $curr_user['username']) ?>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--color-dark-muted); text-transform: uppercase; letter-spacing: 0.5px;">
+                    Vai trò: <strong><?= $curr_user['role'] === 'admin' ? 'Quản trị viên' : 'Khách hàng' ?></strong>
+                </div>
+            </div>
+            <?php if ($curr_user['role'] === 'admin'): ?>
+                <a href="admin_dashboard.php" class="btn btn-outline" style="margin-bottom:.5rem;justify-content:center;width:100%;border-radius:8px;padding:0.6rem;">
+                    <i class="fa-solid fa-chart-line"></i> Trang Quản Trị
+                </a>
+            <?php endif; ?>
+            <a href="logout.php" class="btn btn-outline" style="margin-bottom:.5rem;justify-content:center;width:100%;border-radius:8px;padding:0.6rem;border-color:#ef4444;color:#ef4444;">
+                <i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất
+            </a>
+        <?php else: ?>
+            <a href="login.php" class="btn btn-outline" style="margin-bottom:.5rem;justify-content:center;width:100%;border-radius:8px;padding:0.6rem;">
+                <i class="fa-solid fa-right-to-bracket"></i> Đăng Nhập
+            </a>
+            <a href="register.php" class="btn btn-outline" style="margin-bottom:.5rem;justify-content:center;width:100%;border-radius:8px;padding:0.6rem;">
+                <i class="fa-solid fa-user-plus"></i> Đăng Ký
+            </a>
+        <?php endif; ?>
+
+        <div style="margin-top: 1rem; border-top: 1px solid var(--color-border); padding-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="tel:0976828171"><i class="fa-solid fa-phone" style="color: var(--color-primary);"></i> 0976.828.171</a>
+            <a href="mailto:ngocanhduongchemical@gmail.com"><i class="fa-solid fa-envelope" style="color: var(--color-primary);"></i> ngocanhduongchemical@gmail.com</a>
+        </div>
+        <a href="contact.php" class="btn btn-primary" style="margin-top:.8rem;justify-content:center;border-radius:8px;padding:0.6rem;">
             <i class="fa-solid fa-tag"></i> Nhận Báo Giá
         </a>
     </div>

@@ -170,4 +170,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // ==========================================================================
+    // 6. User Dropdown Menu Toggle (Desktop)
+    // ==========================================================================
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    if (userMenuBtn && userDropdown) {
+        userMenuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle('open');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+                userDropdown.classList.remove('open');
+            }
+        });
+    }
+
 });
